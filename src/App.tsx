@@ -2,13 +2,19 @@ import "./App.css";
 import Header from "./Components/Header";
 import Featured from "./Components/Featured";
 import Footer from "./Components/Footer";
-import { BrowserRouter } from "react-router-dom";
+import Detail from "./Components/Detail";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
-      <Featured />
+
+      <Routes>
+        <Route path="/" element={<Featured />} />
+        <Route path="/detail/:id" element={<Detail />} />
+      </Routes>
+
       <Footer />
     </BrowserRouter>
   );

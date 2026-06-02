@@ -7,7 +7,7 @@ export default function Header() {
         <li>
           <button>Login</button>
         </li>
-        <li>About</li>
+
         <li>Home</li>
       </ul>
     </>

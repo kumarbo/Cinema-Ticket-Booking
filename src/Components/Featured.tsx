@@ -9,8 +9,9 @@ export default function Featured() {
       <div className="movies">
         {movies.map((movie) => (
           <div className="movie" key={movie.id}>
-            <Link to="/">
+            <Link to={`/detail/${movie.id}`}>
               <img src={movie.image} alt={movie.name} />
+
               <h4>{movie.name}</h4>
             </Link>
           </div>

@@ -2,11 +2,12 @@ import { useParams } from "react-router-dom";
 import { movies } from "../assets/data/movies";
 import { useState } from "react";
 import { shows, type Show } from "../assets/data/dates";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [dateValue, setDateValue] = useState<string>("");
-  const [location, setLocation] = useState<string>("Granville Center");
+  const [location, setLocation] = useState<string>("");
   const [selectedShow, setSelectedShow] = useState<Show | null>(null);
 
   const { id } = useParams();
@@ -132,7 +133,9 @@ export default function Header() {
 
               {selectedShow ? (
                 selectedShow.times.map((time) => (
-                  <button key={time}>{time}</button>
+                  <Link to="/seats">
+                    <button key={time}>{time}</button>
+                  </Link>
                 ))
               ) : (
                 <p>No shows available</p>

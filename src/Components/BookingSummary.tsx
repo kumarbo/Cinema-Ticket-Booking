@@ -1,15 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import { useBooking } from "./BookingContext"; // Import context hook
+import { useBooking } from "../Components/BookingContext";
 
 export default function BookingSummary() {
   const navigate = useNavigate();
 
-  // Extract your values straight out of global air
-  const { selectedSeats, totalPrice, clearBooking } = useBooking();
+  const { booking, clearBooking } = useBooking();
 
   const handlePayment = () => {
-    alert("Payment Processed!");
-    clearBooking(); // Reset states to empty safely
+    alert("Payment Processed Successfully!");
+
+    clearBooking();
+
     navigate("/");
   };
 
@@ -17,11 +18,32 @@ export default function BookingSummary() {
     <section className="summary-container">
       <h1>Booking Summary</h1>
 
-      <p>Seats Selected: {selectedSeats.join(", ")}</p>
-      <h2>Total Price: ${totalPrice}</h2>
+      <div className="summary-details">
+        <p>
+          <strong>Date:</strong> {booking.date}
+        </p>
+
+        <p>
+          <strong>Location:</strong> {booking.location}
+        </p>
+
+        <p>
+          <strong>Time:</strong> {booking.time}
+        </p>
+
+        <p>
+          <strong>Seats:</strong>{" "}
+          {booking.seats.length > 0
+            ? booking.seats.join(", ")
+            : "No seats selected"}
+        </p>
+
+        <h2>Total Price: ${booking.totalPrice}</h2>
+      </div>
 
       <div className="actions">
         <button onClick={() => navigate(-1)}>Go Back</button>
+
         <button onClick={handlePayment}>Confirm & Pay</button>
       </div>
     </section>

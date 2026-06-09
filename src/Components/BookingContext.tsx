@@ -1,56 +1,59 @@
 import React, { createContext, useContext, useState } from "react";
 
-// 1. Define types for our shared data structure
-interface BookingContextType {
-  selectedSeats: string[];
+export type Booking = {
+  seats: string[];
   totalPrice: number;
-  setBookingDetails: (seats: string[], price: number) => void;
+  date: string;
+  time: string;
+  location: string;
+};
+
+interface BookingContextType {
+  booking: Booking;
+  setBooking: React.Dispatch<React.SetStateAction<Booking>>;
   clearBooking: () => void;
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
 export function BookingProvider({ children }: { children: React.ReactNode }) {
-  // 2. Initialize state directly from sessionStorage if it exists (fixes refresh loss)
-  const [selectedSeats, setSelectedSeats] = useState<string[]>(() => {
-    const saved = sessionStorage.getItem("ctx_seats");
-    return saved ? JSON.parse(saved) : [];
+  const [booking, setBooking] = useState<Booking>({
+    seats: [],
+    totalPrice: 0,
+    date: "",
+    time: "",
+    location: "",
   });
 
-  const [totalPrice, setTotalPrice] = useState<number>(() => {
-    const saved = sessionStorage.getItem("ctx_price");
-    return saved ? Number(saved) : 0;
-  });
-
-  // 3. Setter function to update both React State and Session Storage at once
-  const setBookingDetails = (seats: string[], price: number) => {
-    setSelectedSeats(seats);
-    setTotalPrice(price);
-    sessionStorage.setItem("ctx_seats", JSON.stringify(seats));
-    sessionStorage.setItem("ctx_price", price.toString());
-  };
-
-  // 4. Utility function to wipe data after payment
   const clearBooking = () => {
-    setSelectedSeats([]);
-    setTotalPrice(0);
-    sessionStorage.removeItem("ctx_seats");
-    sessionStorage.removeItem("ctx_price");
+    setBooking({
+      seats: [],
+      totalPrice: 0,
+      date: "",
+      time: "",
+      location: "",
+    });
   };
 
   return (
     <BookingContext.Provider
-      value={{ selectedSeats, totalPrice, setBookingDetails, clearBooking }}
+      value={{
+        booking,
+        setBooking,
+        clearBooking,
+      }}
     >
       {children}
     </BookingContext.Provider>
   );
 }
 
-// 5. Custom hook for easy access and clean code
 export function useBooking() {
   const context = useContext(BookingContext);
-  if (!context)
-    throw new Error("useBooking must be used within a BookingProvider");
+
+  if (!context) {
+    throw new Error("useBooking must be used within BookingProvider");
+  }
+
   return context;
 }

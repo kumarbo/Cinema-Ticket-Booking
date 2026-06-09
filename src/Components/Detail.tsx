@@ -3,9 +3,10 @@ import { movies } from "../assets/data/movies";
 import { useState } from "react";
 import { shows, type Show } from "../assets/data/dates";
 import { Link } from "react-router-dom";
+import { useBooking } from "./BookingContext";
 
 export default function Header() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState();
   const [dateValue, setDateValue] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [selectedShow, setSelectedShow] = useState<Show | null>(null);
@@ -13,6 +14,8 @@ export default function Header() {
   const { id } = useParams();
 
   const movie = movies.find((movie) => movie.id === Number(id));
+
+  const { setBooking } = useBooking();
 
   if (!movie) {
     return <h2>Movie not found</h2>;
@@ -133,8 +136,19 @@ export default function Header() {
 
               {selectedShow ? (
                 selectedShow.times.map((time) => (
-                  <Link to="/seats">
-                    <button key={time}>{time}</button>
+                  <Link
+                    key={time}
+                    to="/seats"
+                    onClick={() =>
+                      setBooking((prev) => ({
+                        ...prev,
+                        date: dateValue,
+                        location,
+                        time,
+                      }))
+                    }
+                  >
+                    <button>{time}</button>
                   </Link>
                 ))
               ) : (

@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import { Link } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,11 +15,22 @@ export default function Login() {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
 
     const user = users.find(
-      (u: any) => u.email === email && u.password === password,
+      (u: any) =>
+        u.email.trim().toLowerCase() === email.trim().toLowerCase() &&
+        u.password === password,
     );
 
+    if (!email || !password) {
+      alert("Please fill all fields");
+      return;
+    }
+
     if (user) {
-      login({ name: user.name, email: user.email });
+      // ✅ ONLY use context (no direct localStorage usage here)
+      login({
+        name: user.name,
+        email: user.email,
+      });
 
       alert(`Welcome ${user.name}`);
 
@@ -31,11 +41,15 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} style={{ maxWidth: "300px" }}>
+      <h2>Login</h2>
+
       <input
+        type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        style={{ display: "block", marginBottom: "10px" }}
       />
 
       <input
@@ -43,11 +57,13 @@ export default function Login() {
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        style={{ display: "block", marginBottom: "10px" }}
       />
 
       <button type="submit">Login</button>
-      <p>
-        Don't have an account ? <Link to="/register">Register</Link>
+
+      <p style={{ marginTop: "10px" }}>
+        Don't have an account? <Link to="/register">Register</Link>
       </p>
     </form>
   );

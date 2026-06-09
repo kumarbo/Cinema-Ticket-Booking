@@ -13,6 +13,7 @@ import { BookingProvider } from "./Components/BookingContext";
 import { AuthProvider } from "./Components/AuthContext";
 
 import ProtectedRoute from "./Components/ProtectedRoute";
+import MyBookings from "./Components/MyBookings";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/" element={<Featured />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
+            <Route path="/my-bookings" element={<MyBookings />} />
 
             {/* 🔒 PROTECTED ROUTES */}
             <Route

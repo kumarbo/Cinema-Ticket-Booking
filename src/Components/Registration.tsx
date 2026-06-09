@@ -8,26 +8,37 @@ export default function Registration() {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const newUser = {
-      name,
-      email,
-      password,
-    };
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
 
-    const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
+      const data = await res.json();
 
-    existingUsers.push(newUser);
+      if (!res.ok) {
+        alert(data.message);
+        return;
+      }
 
-    localStorage.setItem("users", JSON.stringify(existingUsers));
+      alert("Registration Successful!");
 
-    alert("Registration Successful!");
-
-    navigate("/login");
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+      alert("Server error");
+    }
   };
-
   return (
     <section className="register-container">
       <h2>Create Account</h2>

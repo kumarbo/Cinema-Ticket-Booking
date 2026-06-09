@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState } from "react";
 
 export type Booking = {
-  seats: string[];
-  totalPrice: number;
+  movieId: string;
   date: string;
   time: string;
   location: string;
+  seats: string[];
+  totalPrice: number;
 };
 
 interface BookingContextType {
@@ -16,33 +17,22 @@ interface BookingContextType {
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
-export function BookingProvider({ children }: { children: React.ReactNode }) {
-  const [booking, setBooking] = useState<Booking>({
-    seats: [],
-    totalPrice: 0,
-    date: "",
-    time: "",
-    location: "",
-  });
+const initialState: Booking = {
+  movieId: "",
+  date: "",
+  time: "",
+  location: "",
+  seats: [],
+  totalPrice: 0,
+};
 
-  const clearBooking = () => {
-    setBooking({
-      seats: [],
-      totalPrice: 0,
-      date: "",
-      time: "",
-      location: "",
-    });
-  };
+export function BookingProvider({ children }: { children: React.ReactNode }) {
+  const [booking, setBooking] = useState<Booking>(initialState);
+
+  const clearBooking = () => setBooking(initialState);
 
   return (
-    <BookingContext.Provider
-      value={{
-        booking,
-        setBooking,
-        clearBooking,
-      }}
-    >
+    <BookingContext.Provider value={{ booking, setBooking, clearBooking }}>
       {children}
     </BookingContext.Provider>
   );
@@ -50,10 +40,6 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
 
 export function useBooking() {
   const context = useContext(BookingContext);
-
-  if (!context) {
-    throw new Error("useBooking must be used within BookingProvider");
-  }
-
+  if (!context) throw new Error("useBooking must be used inside provider");
   return context;
 }

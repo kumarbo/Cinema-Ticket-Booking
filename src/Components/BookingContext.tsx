@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from "react";
 
 export type Booking = {
   movieId: string;
+  movieName: string;
   date: string;
   time: string;
   location: string;
@@ -19,6 +20,7 @@ const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
 const initialState: Booking = {
   movieId: "",
+  movieName: "",
   date: "",
   time: "",
   location: "",

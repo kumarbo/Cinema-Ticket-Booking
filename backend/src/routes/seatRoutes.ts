@@ -37,20 +37,25 @@ router.post("/lock", verifyToken, async (req: any, res) => {
   }
 });
 
-// GET LOCKED SEATS
 router.get("/", async (req, res) => {
-  const { movieId, date, time, location } = req.query;
+  try {
+    const movieId = String(req.query.movieId);
+    const date = String(req.query.date);
+    const time = String(req.query.time);
+    const location = String(req.query.location);
 
-  const locks = await SeatLock.find({
-    movieId,
-    date,
-    time,
-    location,
-  });
+    const locks = await SeatLock.find({
+      movieId,
+      date,
+      time,
+      location,
+    });
 
-  const seatIds = locks.map((l) => l.seatId);
-
-  res.json(seatIds);
+    res.json(locks.map((l) => l.seatId));
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to fetch locked seats" });
+  }
 });
 
 // UNLOCK SEAT (when deselecting)

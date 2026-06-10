@@ -32,18 +32,23 @@ export default function Seats() {
   const token = localStorage.getItem("token");
 
   // =========================
+  // RESTORE SEATS FROM CONTEXT
+  // =========================
+  useEffect(() => {
+    setSelectedSeats(booking.seats || []);
+  }, [booking.seats]);
+
+  // =========================
   // FETCH BOOKED + LOCKED SEATS
   // =========================
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        // final booked seats
         const res1 = await fetch(
           `http://localhost:5000/api/bookings/seats?movieId=${movieId}&date=${date}&time=${time}&location=${location}`,
         );
         const booked = await res1.json();
 
-        // locked seats
         const res2 = await fetch(
           `http://localhost:5000/api/seats?movieId=${movieId}&date=${date}&time=${time}&location=${location}`,
         );
@@ -71,7 +76,6 @@ export default function Seats() {
 
     try {
       if (!isSelected) {
-        // LOCK SEAT
         const res = await fetch("http://localhost:5000/api/seats/lock", {
           method: "POST",
           headers: {
@@ -87,12 +91,13 @@ export default function Seats() {
           }),
         });
 
+        const data = await res.json();
+
         if (!res.ok) {
-          alert("Seat already locked by another user");
+          alert(data.message || "Seat lock failed");
           return;
         }
       } else {
-        // UNLOCK SEAT
         await fetch("http://localhost:5000/api/seats/unlock", {
           method: "DELETE",
           headers: {
@@ -109,16 +114,24 @@ export default function Seats() {
         });
       }
 
-      setSelectedSeats((prev) =>
-        isSelected ? prev.filter((s) => s !== seatId) : [...prev, seatId],
-      );
+      const updated = isSelected
+        ? selectedSeats.filter((s) => s !== seatId)
+        : [...selectedSeats, seatId];
+
+      setSelectedSeats(updated);
+
+      // sync to context
+      setBooking({
+        ...booking,
+        seats: updated,
+      });
     } catch (err) {
       console.log(err);
     }
   };
 
   // =========================
-  // TOTAL PRICE
+  // PRICE
   // =========================
   const totalPrice = selectedSeats.reduce((total, seatId) => {
     const rowIndex = seatId.charCodeAt(0) - 65;
@@ -127,25 +140,24 @@ export default function Seats() {
   }, 0);
 
   // =========================
-  // PROCEED BOOKING
+  // PROCEED
   // =========================
   const handleProceed = async () => {
-    if (selectedSeats.length === 0) return;
+    if (!selectedSeats.length) return;
 
     const updatedBooking = {
       ...booking,
       movieId,
+      movieName: booking.movieName,
       seats: selectedSeats,
       totalPrice,
     };
 
-    // update context
-    setBooking(updatedBooking);
+    console.log("BOOKING SENT TO API:", updatedBooking);
 
-    // navigate instantly
+    setBooking(updatedBooking);
     navigate("/bookingSummary");
 
-    // save booking (final confirm)
     try {
       await fetch("http://localhost:5000/api/bookings", {
         method: "POST",
@@ -198,7 +210,7 @@ export default function Seats() {
         })}
       </div>
 
-      <button disabled={selectedSeats.length === 0} onClick={handleProceed}>
+      <button disabled={!selectedSeats.length} onClick={handleProceed}>
         Proceed ({selectedSeats.length}) - ₹{totalPrice}
       </button>
     </section>

@@ -19,6 +19,10 @@ export default function BookingSummary() {
       <p>
         <b>Movie ID:</b> {booking.movieId}
       </p>
+
+      <p>
+        <b>Movie:</b> {booking.movieName}
+      </p>
       <p>
         <b>Date:</b> {booking.date}
       </p>

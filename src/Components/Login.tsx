@@ -8,63 +8,97 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    const user = users.find(
-      (u: any) =>
-        u.email.trim().toLowerCase() === email.trim().toLowerCase() &&
-        u.password === password,
-    );
 
     if (!email || !password) {
       alert("Please fill all fields");
       return;
     }
 
-    if (user) {
-      // ✅ ONLY use context (no direct localStorage usage here)
-      login({
-        name: user.name,
-        email: user.email,
+    try {
+      setLoading(true);
+
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
 
-      alert(`Welcome ${user.name}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Login failed");
+        return;
+      }
+
+      // Save JWT token
+      localStorage.setItem("token", data.token);
+
+      // Save user for page refresh persistence
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
+
+      // Update AuthContext
+      login({
+        name: data.user.name,
+        email: data.user.email,
+      });
+
+      alert(`Welcome ${data.user.name}`);
 
       navigate("/");
-    } else {
-      alert("Invalid credentials");
+    } catch (error) {
+      console.error(error);
+      alert("Server error");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleLogin} style={{ maxWidth: "300px" }}>
+    <section className="login-container">
       <h2>Login</h2>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={{ display: "block", marginBottom: "10px" }}
-      />
+      <form onSubmit={handleLogin}>
+        <div>
+          <input
+            type="email"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={{ display: "block", marginBottom: "10px" }}
-      />
+        <br />
 
-      <button type="submit">Login</button>
+        <div>
+          <input
+            type="password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
 
-      <p style={{ marginTop: "10px" }}>
+        <br />
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </form>
+
+      <p>
         Don't have an account? <Link to="/register">Register</Link>
       </p>
-    </form>
+    </section>
   );
 }

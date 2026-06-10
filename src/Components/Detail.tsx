@@ -138,10 +138,12 @@ export default function Header() {
                 selectedShow.times.map((time) => (
                   <Link
                     key={time}
-                    to="/seats"
+                    to={`/seats/${movie.id}`}
                     onClick={() =>
                       setBooking((prev) => ({
                         ...prev,
+                        movieId: String(movie.id),
+                        movieName: movie.name,
                         date: dateValue,
                         location,
                         time,

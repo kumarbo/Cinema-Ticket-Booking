@@ -367,3 +367,10 @@ code {
   margin: 0;
   font-weight: bold;
 }
+
+/* seat book */
+.seat.booked {
+  background-color: red;
+  color: white;
+  cursor: not-allowed;
+}

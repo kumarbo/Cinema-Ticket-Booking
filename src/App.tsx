@@ -15,6 +15,8 @@ import { AuthProvider } from "./Components/AuthContext";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import MyBookings from "./Components/MyBookings";
 
+import Admin from "./Components/Admin";
+
 function App() {
   return (
     <AuthProvider>
@@ -28,6 +30,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/my-bookings" element={<MyBookings />} />
+            <Route path="/admin" element={<Admin />} />
 
             {/* 🔒 PROTECTED ROUTES */}
             <Route

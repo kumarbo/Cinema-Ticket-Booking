@@ -5,16 +5,26 @@ export interface IMovie extends Document {
   image: string;
   banner: string;
   description: string;
-  duration: string;
+
+  releaseDate: string;
+  runningTime: string;
+  director: string;
+  cast: string;
+  trailer: string;
 }
 
 const movieSchema = new Schema<IMovie>(
   {
-    name: String,
+    name: { type: String, required: true },
     image: String,
     banner: String,
     description: String,
-    duration: String,
+
+    releaseDate: String,
+    runningTime: String,
+    director: String,
+    cast: String,
+    trailer: String,
   },
   { timestamps: true },
 );

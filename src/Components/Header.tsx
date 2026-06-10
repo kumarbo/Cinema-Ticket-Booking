@@ -11,25 +11,50 @@ export default function Header() {
   };
 
   return (
-    <ul className="nav-bar">
+    <ul
+      className="nav-bar"
+      style={{
+        display: "flex",
+        gap: "15px",
+        alignItems: "center",
+        listStyle: "none",
+      }}
+    >
+      {/* HOME */}
       <Link to="/">
         <li>Home</li>
       </Link>
 
-      {user ? (
-        <>
-          <li>👋 Welcome {user.name}</li>
-          <li>
-            <button onClick={handleLogout}>Logout</button>
-          </li>
-        </>
-      ) : (
-        <Link to="/login">
-          <li>
-            <button>Login</button>
-          </li>
+      {/* MY BOOKINGS (ONLY LOGGED IN USERS) */}
+      {user && (
+        <Link to="/my-bookings">
+          <li>My Bookings</li>
         </Link>
       )}
+
+      {/* RIGHT SIDE AUTH */}
+      <div style={{ marginLeft: "auto", display: "flex", gap: "10px" }}>
+        {user ? (
+          <>
+            <li>👋 {user.name}</li>
+            {user && user.email === "admin@gmail.com" && (
+              <Link to="/admin">
+                <li>Admin Panel</li>
+              </Link>
+            )}
+
+            <li>
+              <button onClick={handleLogout}>Logout</button>
+            </li>
+          </>
+        ) : (
+          <Link to="/login">
+            <li>
+              <button>Login</button>
+            </li>
+          </Link>
+        )}
+      </div>
     </ul>
   );
 }

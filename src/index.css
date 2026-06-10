@@ -374,3 +374,15 @@ code {
   color: white;
   cursor: not-allowed;
 }
+
+.seat.booked {
+  background: red;
+}
+
+.seat.locked {
+  background: orange;
+}
+
+.seat.selected {
+  background: green;
+}

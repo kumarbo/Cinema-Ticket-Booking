@@ -1,164 +1,138 @@
-import { useParams } from "react-router-dom";
-import { movies } from "../assets/data/movies";
-import { useState } from "react";
-import { shows, type Show } from "../assets/data/dates";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { useBooking } from "./BookingContext";
 
-export default function Header() {
-  const [activeIndex, setActiveIndex] = useState();
-  const [dateValue, setDateValue] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
-  const [selectedShow, setSelectedShow] = useState<Show | null>(null);
+type Movie = {
+  _id: string;
+  name: string;
+  image: string;
+  banner: string;
+  description: string;
+  releaseDate: string;
+  runningTime: string;
+  director: string;
+  cast: string[];
+  trailer: string;
+};
 
+export default function Details() {
   const { id } = useParams();
-
-  const movie = movies.find((movie) => movie.id === Number(id));
-
   const { setBooking } = useBooking();
 
-  if (!movie) {
-    return <h2>Movie not found</h2>;
-  }
+  const [movie, setMovie] = useState<Movie | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [dateValue, setDateValue] = useState("");
+  const [location, setLocation] = useState("");
+  const [selectedShow, setSelectedShow] = useState<any>(null);
 
-  // Generate next 7 days
-  const getNext7Days = () => {
-    return Array.from({ length: 7 }, (_, i) => {
-      const date = new Date();
-      date.setDate(date.getDate() + i);
-      return date;
-    });
-  };
+  // FETCH MOVIE
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/movies/${id}`)
+      .then((res) => res.json())
+      .then((data) => setMovie(data))
+      .catch((err) => console.log(err));
+  }, [id]);
 
-  const dates = getNext7Days();
+  if (!movie) return <h2>Loading movie...</h2>;
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
+  // NEXT 7 DAYS
+  const dates = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    return d;
+  });
+
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString("en-US", {
       weekday: "short",
       day: "2-digit",
       month: "short",
     });
-  };
 
-  // Play trailer
+  // TRAILER
   const playTrailer = () => {
     window.open(movie.trailer, "_blank");
   };
 
-  // Find show based on selected date + location
-  const checkDate = () => {
-    const foundShow = shows.find(
-      (show) =>
-        show.movieId === movie.id &&
-        show.date === dateValue &&
-        show.location === location,
+  // FETCH SHOWS FROM BACKEND
+  const checkDate = async () => {
+    const res = await fetch(
+      `http://localhost:5000/api/shows?movieId=${movie._id}&date=${dateValue}&location=${location}`,
     );
 
-    setSelectedShow(foundShow || null);
+    const data = await res.json();
+    setSelectedShow(data.length ? data[0] : null);
   };
 
   return (
     <section className="movie_detail">
+      {/* BANNER */}
       <div className="featured-wallpaper">
-        <img src={movie.banner} alt="" className="bannerImg" />
+        <img src={movie.banner} className="bannerImg" />
         <img
           src="/src/assets/play-button.png"
-          alt="Play Trailer"
           className="playBtn"
           onClick={playTrailer}
         />
       </div>
 
+      {/* MOVIE INFO */}
       <div className="movie-description">
-        <div className="thumbnail-pic">
-          <img src={movie.image} alt={movie.name} />
-        </div>
-
-        <div className="details">
-          <h2>{movie.name}</h2>
-
-          <p>{movie.description}</p>
-
-          <ul>
-            <li>
-              <strong>Release Date: </strong> {movie.releaseDate}
-            </li>
-            <li>
-              <strong>Running Time: </strong> {movie.runningTime}
-            </li>
-            <li>
-              <strong>Director: </strong> {movie.director}
-            </li>
-            <li>
-              <strong>Cast: </strong> {movie.cast}
-            </li>
-          </ul>
-        </div>
+        <img src={movie.image} />
+        <h2>{movie.name}</h2>
+        <p>{movie.description}</p>
       </div>
 
-      <div className="dateLocation">
-        {/* DATE SELECTOR */}
-        <div className="chooseDate">
-          {dates.map((date, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setActiveIndex(index);
-                setDateValue(date.toISOString().split("T")[0]);
-              }}
-              className={`dateBtn ${activeIndex === index ? "active" : ""}`}
-            >
-              {formatDate(date)}
-            </button>
-          ))}
-        </div>
-
-        {/* LOCATION + SEARCH */}
-        <div className="location">
-          <span>Choose Location:</span>
-
-          <select
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+      {/* DATE */}
+      <div className="chooseDate">
+        {dates.map((date, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setActiveIndex(i);
+              setDateValue(date.toISOString().split("T")[0]);
+            }}
+            className={activeIndex === i ? "active" : ""}
           >
-            <option value="">Choose Location</option>
-            <option value="Paramatta Complex">Paramatta Complex</option>
-            <option value="Granville Center">Granville Center</option>
-            <option value="Penrith Westfield">Penrith Westfield</option>
-          </select>
+            {formatDate(date)}
+          </button>
+        ))}
+      </div>
 
-          <button onClick={checkDate}>Search</button>
+      {/* LOCATION */}
+      <select onChange={(e) => setLocation(e.target.value)}>
+        <option value="">Choose Location</option>
+        <option>Paramatta Complex</option>
+        <option>Granville Center</option>
+        <option>Penrith Westfield</option>
+      </select>
 
-          {/* SHOW TIMES */}
-          <div className="availableTime">
-            <div className="place">
-              <h5>Screen Time</h5>
+      <button onClick={checkDate}>Search</button>
 
-              {selectedShow ? (
-                selectedShow.times.map((time) => (
-                  <Link
-                    key={time}
-                    to={`/seats/${movie.id}`}
-                    onClick={() =>
-                      setBooking((prev) => ({
-                        ...prev,
-                        movieId: String(movie.id),
-                        movieName: movie.name,
-                        date: dateValue,
-                        location,
-                        time,
-                      }))
-                    }
-                  >
-                    <button>{time}</button>
-                  </Link>
-                ))
-              ) : (
-                <p>No shows available</p>
-              )}
-            </div>
-          </div>
-        </div>
+      {/* SHOW TIMES */}
+      <div>
+        {selectedShow ? (
+          selectedShow.times.map((time: string) => (
+            <Link
+              key={time}
+              to={`/seats/${movie._id}`}
+              onClick={() =>
+                setBooking((prev: any) => ({
+                  ...prev,
+                  movieId: movie._id,
+                  movieName: movie.name,
+                  date: dateValue,
+                  location,
+                  time,
+                }))
+              }
+            >
+              <button>{time}</button>
+            </Link>
+          ))
+        ) : (
+          <p>No shows available</p>
+        )}
       </div>
     </section>
   );

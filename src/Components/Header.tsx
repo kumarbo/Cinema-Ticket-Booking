@@ -1,3 +1,5 @@
+import "../styles/Header.css";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
@@ -11,15 +13,7 @@ export default function Header() {
   };
 
   return (
-    <ul
-      className="nav-bar"
-      style={{
-        display: "flex",
-        gap: "15px",
-        alignItems: "center",
-        listStyle: "none",
-      }}
-    >
+    <ul className="nav-bar">
       {/* HOME */}
       <Link to="/">
         <li>Home</li>
@@ -33,7 +27,7 @@ export default function Header() {
       )}
 
       {/* RIGHT SIDE AUTH */}
-      <div style={{ marginLeft: "auto", display: "flex", gap: "10px" }}>
+      <div>
         {user ? (
           <>
             <li>👋 {user.name}</li>

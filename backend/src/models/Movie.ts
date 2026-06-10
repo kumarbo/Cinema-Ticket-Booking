@@ -9,7 +9,7 @@ export interface IMovie extends Document {
   releaseDate: string;
   runningTime: string;
   director: string;
-  cast: string;
+  cast: string[];
   trailer: string;
 }
 
@@ -23,7 +23,10 @@ const movieSchema = new Schema<IMovie>(
     releaseDate: String,
     runningTime: String,
     director: String,
-    cast: String,
+    cast: {
+      type: [String],
+      default: [],
+    },
     trailer: String,
   },
   { timestamps: true },

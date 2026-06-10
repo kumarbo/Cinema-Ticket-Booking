@@ -78,9 +78,18 @@ export default function Details() {
 
       {/* MOVIE INFO */}
       <div className="movie-description">
-        <img src={movie.image} />
-        <h2>{movie.name}</h2>
-        <p>{movie.description}</p>
+        <div>
+          <img src={movie.image} />
+        </div>
+
+        <div className="description-div">
+          <h2>{movie.name}</h2>
+
+          <p>{movie.description}</p>
+          <p>Release Date: {movie.releaseDate}</p>
+          <p>Director: {movie.director}</p>
+          <p>Cast: {movie.cast?.join(", ")}</p>
+        </div>
       </div>
 
       {/* DATE */}

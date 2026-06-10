@@ -1,7 +1,7 @@
 import "./App.css";
 import Header from "./Components/Header";
 import Featured from "./Components/Featured";
-import Footer from "./Components/Footer";
+
 import Detail from "./Components/Detail";
 import Seats from "./Components/Seats";
 import BookingSummary from "./Components/BookingSummary";
@@ -14,8 +14,6 @@ import { AuthProvider } from "./Components/AuthContext";
 
 import ProtectedRoute from "./Components/ProtectedRoute";
 import MyBookings from "./Components/MyBookings";
-
-import Admin from "./Components/Admin";
 
 function App() {
   return (
@@ -30,7 +28,6 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/my-bookings" element={<MyBookings />} />
-            <Route path="/admin" element={<Admin />} />
 
             {/* 🔒 PROTECTED ROUTES */}
             <Route
@@ -60,8 +57,6 @@ function App() {
               }
             />
           </Routes>
-
-          <Footer />
         </BrowserRouter>
       </BookingProvider>
     </AuthProvider>

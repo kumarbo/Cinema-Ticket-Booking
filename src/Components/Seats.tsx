@@ -210,8 +210,12 @@ export default function Seats() {
         })}
       </div>
 
-      <button disabled={!selectedSeats.length} onClick={handleProceed}>
-        Proceed ({selectedSeats.length}) - ₹{totalPrice}
+      <button
+        disabled={!selectedSeats.length}
+        onClick={handleProceed}
+        className="proceedBtn"
+      >
+        Proceed
       </button>
     </section>
   );

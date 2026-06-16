@@ -85,15 +85,22 @@ export default function Details() {
         <div className="description-div">
           <h2>{movie.name}</h2>
 
-          <p>{movie.description}</p>
-          <p>Release Date: {movie.releaseDate}</p>
-          <p>Director: {movie.director}</p>
-          <p>Cast: {movie.cast?.join(", ")}</p>
+          <p className="movieDescript">{movie.description}</p>
+          <p>
+            <strong>Release Date:</strong> {movie.releaseDate}
+          </p>
+          <p>
+            <strong>Director:</strong> {movie.director}
+          </p>
+          <p>
+            <strong>Cast:</strong> {movie.cast?.join(", ")}
+          </p>
         </div>
       </div>
 
       {/* DATE */}
       <div className="chooseDate">
+        <h3>Choose Show Time</h3>
         {dates.map((date, i) => (
           <button
             key={i}
@@ -116,10 +123,12 @@ export default function Details() {
         <option>Penrith Westfield</option>
       </select>
 
-      <button onClick={checkDate}>Search</button>
+      <button onClick={checkDate} className="searchBtn">
+        Search
+      </button>
 
       {/* SHOW TIMES */}
-      <div>
+      <div className="showInfo">
         {selectedShow ? (
           selectedShow.times.map((time: string) => (
             <Link

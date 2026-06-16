@@ -97,7 +97,7 @@ export default function MyBookings() {
             </p>
 
             <p>
-              <strong>Total Price:</strong> ₹{b.totalPrice}
+              <strong>Total Price:</strong> AUD{b.totalPrice}
             </p>
 
             <p style={{ fontSize: "12px", color: "gray" }}>

@@ -27,7 +27,9 @@ export default function Admin() {
   // ================= FETCH MOVIES =================
   const fetchMovies = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/movies");
+      const res = await fetch(
+        "https://cinema-ticket-booking-1.onrender.com/api/movies",
+      );
       const data = await res.json();
       setMovies(data);
     } catch (err) {
@@ -42,24 +44,27 @@ export default function Admin() {
   // ================= ADD MOVIE =================
   const addMovie = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/movies", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: movieForm.name,
-          image: movieForm.image,
-          banner: movieForm.banner,
-          description: movieForm.description,
-          releaseDate: movieForm.releaseDate,
-          runningTime: movieForm.runningTime,
-          director: movieForm.director,
-          cast: movieForm.cast
-            .split(",")
-            .map((c) => c.trim())
-            .filter(Boolean),
-          trailer: movieForm.trailer,
-        }),
-      });
+      const res = await fetch(
+        "https://cinema-ticket-booking-1.onrender.com/api/movies",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: movieForm.name,
+            image: movieForm.image,
+            banner: movieForm.banner,
+            description: movieForm.description,
+            releaseDate: movieForm.releaseDate,
+            runningTime: movieForm.runningTime,
+            director: movieForm.director,
+            cast: movieForm.cast
+              .split(",")
+              .map((c) => c.trim())
+              .filter(Boolean),
+            trailer: movieForm.trailer,
+          }),
+        },
+      );
 
       const data = await res.json();
 
@@ -93,19 +98,22 @@ export default function Admin() {
   // ================= ADD SHOW =================
   const addShow = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/shows", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          movieId: showForm.movieId,
-          date: showForm.date,
-          location: showForm.location,
-          times: showForm.times
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean),
-        }),
-      });
+      const res = await fetch(
+        "https://cinema-ticket-booking-1.onrender.com/api/shows",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            movieId: showForm.movieId,
+            date: showForm.date,
+            location: showForm.location,
+            times: showForm.times
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean),
+          }),
+        },
+      );
 
       const data = await res.json();
 

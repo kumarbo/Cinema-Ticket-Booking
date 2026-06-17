@@ -27,7 +27,7 @@ export default function Details() {
 
   // FETCH MOVIE
   useEffect(() => {
-    fetch(`http://localhost:5000/api/movies/${id}`)
+    fetch(`https://cinema-ticket-booking-1.onrender.com/api/movies/${id}`)
       .then((res) => res.json())
       .then((data) => setMovie(data))
       .catch((err) => console.log(err));
@@ -57,7 +57,7 @@ export default function Details() {
   // FETCH SHOWS FROM BACKEND
   const checkDate = async () => {
     const res = await fetch(
-      `http://localhost:5000/api/shows?movieId=${movie._id}&date=${dateValue}&location=${location}`,
+      `https://cinema-ticket-booking-1.onrender.com/api/movies/api/shows?movieId=${movie._id}&date=${dateValue}&location=${location}`,
     );
 
     const data = await res.json();

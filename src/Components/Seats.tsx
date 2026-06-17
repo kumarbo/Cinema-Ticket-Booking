@@ -45,12 +45,12 @@ export default function Seats() {
     const fetchSeats = async () => {
       try {
         const res1 = await fetch(
-          `http://localhost:5000/api/bookings/seats?movieId=${movieId}&date=${date}&time=${time}&location=${location}`,
+          `https://cinema-ticket-booking-1.onrender.com/api/movies/api/bookings/seats?movieId=${movieId}&date=${date}&time=${time}&location=${location}`,
         );
         const booked = await res1.json();
 
         const res2 = await fetch(
-          `http://localhost:5000/api/seats?movieId=${movieId}&date=${date}&time=${time}&location=${location}`,
+          `https://cinema-ticket-booking-1.onrender.com/api/movies/api/seats?movieId=${movieId}&date=${date}&time=${time}&location=${location}`,
         );
         const locked = await res2.json();
 
@@ -76,20 +76,23 @@ export default function Seats() {
 
     try {
       if (!isSelected) {
-        const res = await fetch("http://localhost:5000/api/seats/lock", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          "https://cinema-ticket-booking-1.onrender.com/api/movies/api/seats/lock",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              movieId,
+              date,
+              time,
+              location,
+              seatId,
+            }),
           },
-          body: JSON.stringify({
-            movieId,
-            date,
-            time,
-            location,
-            seatId,
-          }),
-        });
+        );
 
         const data = await res.json();
 
@@ -98,20 +101,23 @@ export default function Seats() {
           return;
         }
       } else {
-        await fetch("http://localhost:5000/api/seats/unlock", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        await fetch(
+          "https://cinema-ticket-booking-1.onrender.com/api/movies/api/seats/unlock",
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              movieId,
+              date,
+              time,
+              location,
+              seatId,
+            }),
           },
-          body: JSON.stringify({
-            movieId,
-            date,
-            time,
-            location,
-            seatId,
-          }),
-        });
+        );
       }
 
       const updated = isSelected
@@ -159,14 +165,17 @@ export default function Seats() {
     navigate("/bookingSummary");
 
     try {
-      await fetch("http://localhost:5000/api/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      await fetch(
+        "https://cinema-ticket-booking-1.onrender.com/api/movies/api/bookings",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updatedBooking),
         },
-        body: JSON.stringify(updatedBooking),
-      });
+      );
     } catch (err) {
       console.log("Booking failed", err);
     }

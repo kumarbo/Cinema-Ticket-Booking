@@ -12,17 +12,20 @@ export default function Registration() {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        "https://cinema-ticket-booking-1.onrender.com/api/movies/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+          }),
         },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
-      });
+      );
 
       const data = await res.json();
 

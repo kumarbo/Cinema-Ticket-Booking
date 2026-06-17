@@ -21,13 +21,16 @@ export default function MyBookings() {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/bookings/my", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          "https://cinema-ticket-booking-1.onrender.com/api/movies/api/bookings/my",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         const data = await res.json();
         setBookings(data || []);

@@ -11,7 +11,7 @@ export default function Featured() {
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
-    fetch("https://cinema-ticket-booking-1.onrender.com/api/movies/api/movies")
+    fetch("https://cinema-ticket-booking-1.onrender.com/api/movies")
       .then((res) => res.json())
       .then((data) => setMovies(data))
       .catch((err) => console.log(err));

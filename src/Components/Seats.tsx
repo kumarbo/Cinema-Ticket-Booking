@@ -38,6 +38,7 @@ export default function Seats() {
     setSelectedSeats(booking.seats || []);
   }, [booking.seats]);
 
+  //hello
   // =========================
   // FETCH BOOKED + LOCKED SEATS
   // =========================
@@ -45,12 +46,12 @@ export default function Seats() {
     const fetchSeats = async () => {
       try {
         const res1 = await fetch(
-          `https://cinema-ticket-booking-1.onrender.com/api/movies/api/bookings/seats?movieId=${movieId}&date=${date}&time=${time}&location=${location}`,
+          `https://cinema-ticket-booking-1.onrender.com/api/bookings/seats?movieId=${movieId}&date=${date}&time=${time}&location=${location}`,
         );
         const booked = await res1.json();
 
         const res2 = await fetch(
-          `https://cinema-ticket-booking-1.onrender.com/api/movies/api/seats?movieId=${movieId}&date=${date}&time=${time}&location=${location}`,
+          `https://cinema-ticket-booking-1.onrender.com/api/seats?movieId=${movieId}&date=${date}&time=${time}&location=${location}`,
         );
         const locked = await res2.json();
 
@@ -77,7 +78,7 @@ export default function Seats() {
     try {
       if (!isSelected) {
         const res = await fetch(
-          "https://cinema-ticket-booking-1.onrender.com/api/movies/api/seats/lock",
+          "https://cinema-ticket-booking-1.onrender.com/api/seats/lock",
           {
             method: "POST",
             headers: {
@@ -102,7 +103,7 @@ export default function Seats() {
         }
       } else {
         await fetch(
-          "https://cinema-ticket-booking-1.onrender.com/api/movies/api/seats/unlock",
+          "https://cinema-ticket-booking-1.onrender.com/api/seats/unlock",
           {
             method: "DELETE",
             headers: {
@@ -165,17 +166,14 @@ export default function Seats() {
     navigate("/bookingSummary");
 
     try {
-      await fetch(
-        "https://cinema-ticket-booking-1.onrender.com/api/movies/api/bookings",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(updatedBooking),
+      await fetch("https://cinema-ticket-booking-1.onrender.com/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: JSON.stringify(updatedBooking),
+      });
     } catch (err) {
       console.log("Booking failed", err);
     }

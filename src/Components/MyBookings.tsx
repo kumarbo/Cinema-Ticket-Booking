@@ -22,7 +22,7 @@ export default function MyBookings() {
     const fetchBookings = async () => {
       try {
         const res = await fetch(
-          "https://cinema-ticket-booking-1.onrender.com/api/movies/api/bookings/my",
+          "https://cinema-ticket-booking-1.onrender.com/api/bookings/my",
           {
             method: "GET",
             headers: {

@@ -57,7 +57,7 @@ export default function Details() {
   // FETCH SHOWS FROM BACKEND
   const checkDate = async () => {
     const res = await fetch(
-      `https://cinema-ticket-booking-1.onrender.com/api/movies/api/shows?movieId=${movie._id}&date=${dateValue}&location=${location}`,
+      `https://cinema-ticket-booking-1.onrender.com/api/shows?movieId=${movie._id}&date=${dateValue}&location=${location}`,
     );
 
     const data = await res.json();

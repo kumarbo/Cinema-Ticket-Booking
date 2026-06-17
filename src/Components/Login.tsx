@@ -22,7 +22,7 @@ export default function Login() {
       setLoading(true);
 
       const res = await fetch(
-        "https://cinema-ticket-booking-1.onrender.com/api/movies/api/auth/login",
+        "https://cinema-ticket-booking-1.onrender.com/api/auth/login",
         {
           method: "POST",
           headers: {

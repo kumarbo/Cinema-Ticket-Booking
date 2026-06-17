@@ -13,7 +13,7 @@ export default function Registration() {
 
     try {
       const res = await fetch(
-        "https://cinema-ticket-booking-1.onrender.com/api/movies/api/auth/register",
+        "https://cinema-ticket-booking-1.onrender.com/api/auth/register",
         {
           method: "POST",
           headers: {
